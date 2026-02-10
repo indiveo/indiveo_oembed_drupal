@@ -1,0 +1,18 @@
+{
+    "dependencies": {
+        "module": [
+            "filter"
+        ]
+    },
+    "name": "Basic HTML",
+    "format": "basic_html",
+    "weight": 0,
+    "filters": {
+        "filter_html": {
+            "status": true,
+            "settings": {
+                "allowed_html": "<p> <a href> <strong> <em>"
+            }
+        }
+    }
+}

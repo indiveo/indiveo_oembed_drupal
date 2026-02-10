@@ -1,0 +1,11 @@
+uuid: 9e4ca446-51eb-46cb-b65d-c451e8656764
+langcode: en
+status: true
+dependencies:
+  config:
+    - oembed_providers.provider.indiveo
+id: indiveo
+label: Indiveo
+description: ''
+providers:
+  - Indiveo

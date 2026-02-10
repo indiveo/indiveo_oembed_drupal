@@ -1,0 +1,9 @@
+{
+    "format": "basic_html",
+    "editor": "ckeditor5",
+    "settings": {
+        "toolbar": {
+            "items": ["bold", "italic"]
+        }
+    }
+}

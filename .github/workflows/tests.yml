@@ -1,0 +1,53 @@
+name: tests
+
+on:
+  push:
+    branches:
+      - 'master-foobarbaz'
+
+jobs:
+  tests:
+    runs-on: ubuntu-latest
+    name: Tests
+    env:
+      # SIMPLETEST_DB: "sqlite://localhost/:memory:"
+      SIMPLETEST_DB: "mysql://sail:password@127.0.0.1:3306/ci"
+      SIMPLETEST_BASE_URL: "http://127.0.0.1:8080"
+    services:
+      mysql:
+        image: mysql:8.0
+        env:
+          MYSQL_DATABASE: ci
+          MYSQL_USER: sail
+          MYSQL_PASSWORD: password
+          MYSQL_ROOT_PASSWORD: password
+        ports:
+          - 3306:3306
+        options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
+    steps:
+      - name: Checkout Drupal code
+        uses: actions/checkout@v5
+        with:
+          repository: drupal/drupal
+          ref: 11.x
+
+      - name: Checkout Indiveo oEmbed code
+        uses: actions/checkout@v5
+        with:
+          path: modules/contrib/indiveo_oembed_drupal
+
+      - name: Setup PHP
+        uses: shivammathur/setup-php@v2
+        with:
+          php-version: 8.2
+
+      - name: Install Drupal core dependencies
+        run: |
+          composer --no-interaction --no-progress --prefer-dist --optimize-autoloader install
+
+      - name: Install Module dependencies
+        run: |
+          composer --dev --no-interaction --no-progress require drupal/oembed_providers:^2.2
+
+      - name: Execute tests
+        run: ./vendor/bin/phpunit --bootstrap core/tests/bootstrap.php modules/contrib/indiveo_oembed_drupal

@@ -1,0 +1,9 @@
+name: 'Indiveo Test Support'
+type: module
+description: 'Provides test-specific configuration for Indiveo oEmbed and Media.'
+core_version_requirement: '^10 || ^11'
+package: Testing
+dependencies:
+  - indiveo_oembed_drupal
+  - media
+  - image

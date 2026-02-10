@@ -1,0 +1,16 @@
+langcode: en
+status: true
+dependencies: {  }
+id: indiveo
+label: Indiveo
+provider_url: 'https://indiveo.services'
+endpoints:
+  -
+    schemes:
+      - 'https://indiveo.services/embed/*'
+      - 'https://indiveo.services/divis/weblink/*'
+    url: 'https://indiveo.services/oembed'
+    discovery: true
+    formats:
+      json: true
+      xml: false

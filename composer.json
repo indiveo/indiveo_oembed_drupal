@@ -1,0 +1,28 @@
+{
+    "name": "indiveo/indiveo-oembed",
+    "version": "1.0.0",
+    "repositories": [
+        {
+            "type": "composer",
+            "url": "https://packages.drupal.org/8"
+        }
+    ],
+    "require-dev": {
+        "drupal/oembed_providers": "^2.2.2"
+    },
+    "minimum-stability": "stable",
+    "prefer-stable": true,
+    "config": {
+        "allow-plugins": {
+            "php-http/discovery": true,
+            "phpstan/extension-installer": true,
+            "tbachert/spi": true,
+            "dealerdirect/phpcodesniffer-composer-installer": true
+        }
+    },
+    "scripts": {
+        "test": [
+            "export SIMPLETEST_DB='sqlite://localhost/:memory:' && /opt/drupal/vendor/bin/phpunit --bootstrap /opt/drupal/web/core/tests/bootstrap.php /opt/drupal/web/modules/custom/indiveo_oembed_drupal"
+        ]
+    }
+}

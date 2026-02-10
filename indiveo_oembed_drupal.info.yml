@@ -1,0 +1,9 @@
+name: 'Indiveo oEmbed'
+type: module
+description: 'Enables the ability to paste an Indiveo URL in its own line and for oEmbed to make it play.'
+package: Media
+core_version_requirement: '^10 || ^11'
+dependencies:
+  - drupal:media
+  - drupal:media_library
+  - drupal:oembed_providers

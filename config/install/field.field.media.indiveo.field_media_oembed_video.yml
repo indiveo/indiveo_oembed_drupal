@@ -1,0 +1,19 @@
+uuid: d6f7d4b2-d526-4726-a3fe-29ee6fdce165
+langcode: en
+status: true
+dependencies:
+  config:
+    - field.storage.media.field_media_oembed_video
+    - media.type.indiveo
+id: media.indiveo.field_media_oembed_video
+field_name: field_media_oembed_video
+entity_type: media
+bundle: indiveo
+label: 'Indiveo URL'
+description: ''
+required: true
+translatable: true
+default_value: {  }
+default_value_callback: ''
+settings: {  }
+field_type: string

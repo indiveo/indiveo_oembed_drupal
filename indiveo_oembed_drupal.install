@@ -1,0 +1,151 @@
+<?php
+
+/**
+ * @file
+ * Install, update and uninstall functions for the Indiveo oEmbed.
+ */
+
+/**
+ * Implements hook_install().
+ */
+function indiveo_oembed_drupal_install() {
+  $config_factory = \Drupal::configFactory();
+
+  // 1. Editor: basic_html.
+  $editor_config = $config_factory->getEditable('editor.editor.basic_html');
+  $editor_settings = $editor_config->get('settings');
+
+  if (!in_array('drupalMedia', $editor_settings['toolbar']['items'] ?? [], TRUE)) {
+    $editor_settings['toolbar']['items'][] = 'drupalMedia';
+  }
+
+  if (isset($editor_settings['plugins']['media_media'])) {
+    $editor_settings['plugins']['media_media']['allow_view_mode_override'] = FALSE;
+  }
+  else {
+    $editor_settings['plugins']['media_media'] = [
+      'allow_view_mode_override' => FALSE,
+    ];
+  }
+
+  $editor_config->set('settings', $editor_settings)->save();
+
+  // 2. Filter: basic_html.
+  $filter_config = $config_factory->getEditable('filter.format.basic_html');
+  $dependencies = $filter_config->get('dependencies');
+
+  if (!in_array('media', $dependencies['module'] ?? [], TRUE)) {
+    $dependencies['module'][] = 'media';
+  }
+
+  $filters = $filter_config->get('filters');
+
+  // Allowed HTML tag toevoegen.
+  if (isset($filters['filter_html']['settings']['allowed_html'])) {
+    $allowed_html = $filters['filter_html']['settings']['allowed_html'];
+    $media_tag = '<drupal-media data-entity-type data-entity-uuid alt data-caption data-align>';
+    if (strpos($allowed_html, $media_tag) === FALSE) {
+      $allowed_html = trim($allowed_html) . ' ' . $media_tag;
+      $filters['filter_html']['settings']['allowed_html'] = $allowed_html;
+    }
+  }
+
+  // Media embed filter toevoegen.
+  if (!isset($filters['media_embed'])) {
+    $filters['media_embed'] = [
+      'id' => 'media_embed',
+      'provider' => 'media',
+      'status' => TRUE,
+      'weight' => 100,
+      'settings' => [
+        'default_view_mode' => 'default',
+        'allowed_view_modes' => [],
+        'allowed_media_types' => [],
+      ],
+    ];
+  }
+
+  $filter_config
+    ->set('dependencies', $dependencies)
+    ->set('filters', $filters)
+    ->save();
+}
+
+/**
+ * Implements hook_uninstall().
+ */
+function indiveo_oembed_drupal_uninstall() {
+  $config_factory = \Drupal::configFactory();
+
+  // ------------------------------
+  // 1. Editor: basic_html terugdraaien
+  // ------------------------------
+  $editor_config = $config_factory->getEditable('editor.editor.basic_html');
+  $editor_settings = $editor_config->get('settings');
+
+  // Toolbar item verwijderen.
+  if (($key = array_search('drupalMedia', $editor_settings['toolbar']['items'], TRUE)) !== FALSE) {
+    unset($editor_settings['toolbar']['items'][$key]);
+    $editor_settings['toolbar']['items'] = array_values($editor_settings['toolbar']['items']);
+  }
+
+  // Plugin-instelling terugzetten/verwijderen.
+  if (isset($editor_settings['plugins']['media_media']['allow_view_mode_override'])) {
+    unset($editor_settings['plugins']['media_media']['allow_view_mode_override']);
+    if (empty($editor_settings['plugins']['media_media'])) {
+      unset($editor_settings['plugins']['media_media']);
+    }
+  }
+
+  $editor_config->set('settings', $editor_settings)->save();
+
+  // ------------------------------
+  // 2. Filter: basic_html terugdraaien
+  // ------------------------------
+  $filter_config = $config_factory->getEditable('filter.format.basic_html');
+  $dependencies = $filter_config->get('dependencies');
+
+  // Media dependency verwijderen.
+  if (($key = array_search('media', $dependencies['module'], TRUE)) !== FALSE) {
+    unset($dependencies['module'][$key]);
+    $dependencies['module'] = array_values($dependencies['module']);
+  }
+
+  $filters = $filter_config->get('filters');
+
+  // Allowed HTML tag verwijderen.
+  if (isset($filters['filter_html']['settings']['allowed_html'])) {
+    $media_tag = '<drupal-media data-entity-type data-entity-uuid alt data-caption data-align>';
+    $filters['filter_html']['settings']['allowed_html'] = trim(
+      str_replace($media_tag, '', $filters['filter_html']['settings']['allowed_html'])
+    );
+  }
+
+  // Media embed filter verwijderen.
+  if (isset($filters['media_embed'])) {
+    unset($filters['media_embed']);
+  }
+
+  $filter_config
+    ->set('dependencies', $dependencies)
+    ->set('filters', $filters)
+    ->save();
+
+  // ------------------------------
+  // 3. Config uit config/install/ verwijderen
+  // ------------------------------
+  $module_path = \Drupal::service('extension.list.module')->getPath('indiveo_oembed_drupal');
+  $config_install_path = $module_path . '/config/install';
+
+  if (is_dir($config_install_path)) {
+    $files = scandir($config_install_path);
+    foreach ($files as $file) {
+      if (pathinfo($file, PATHINFO_EXTENSION) === 'yml') {
+        $config_name = pathinfo($file, PATHINFO_FILENAME);
+        if ($config_factory->getEditable($config_name)->get() !== NULL) {
+          $config_factory->getEditable($config_name)->delete();
+        }
+      }
+    }
+  }
+}
