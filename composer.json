@@ -1,6 +1,7 @@
 {
-    "name": "indiveo/indiveo-oembed",
+    "name": "indiveo/indiveo_oembed_drupal",
     "version": "1.0.0",
+    "type": "drupal-module",
     "repositories": [
         {
             "type": "composer",
@@ -8,7 +9,7 @@
         }
     ],
     "require-dev": {
-        "drupal/oembed_providers": "^2.2.2"
+        "drupal/oembed_providers": "^2.2.3"
     },
     "minimum-stability": "stable",
     "prefer-stable": true,
