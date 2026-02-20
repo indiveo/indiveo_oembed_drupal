@@ -14,23 +14,22 @@ De Indiveo oEmbed module:
 
 - Drupal 10 of 11
 - De volgende Drupal core modules:
-  - Media
-  - Media Library
-  - oEmbed Providers
+  - [Media](https://www.drupal.org/docs/8/core/modules/media/overview)
+  - [Media Library](https://www.drupal.org/project/media_library)
+  - [oEmbed Providers](https://www.drupal.org/project/oembed_providers)
 
 ## Installatie
 
-1. **Download en plaats de module:**
-   ```bash
-   # Plaats de module in modules/custom/indiveo_oembed_drupal/
-   ```
-
-2. **Installeer via Drush:**
-   ```bash
-   drush en indiveo_oembed_drupal
-   ```
-
-3. **Of installeer via de Drupal UI:**
+1. **Installeer de module via Composer:**
+```bash
+composer require indiveo/indiveo_oembed_drupal
+```
+De module wordt automatisch geplaatst in `modules/contrib/indiveo_oembed_drupal`.
+2. **Schakel de module in via Drush:**
+```bash
+drush en indiveo_oembed_drupal
+```
+3. **Of schakel de module in via de Drupal UI:**
    - Ga naar Extend (`/admin/modules`)
    - Zoek naar "Indiveo oEmbed"
    - Vink de module aan en klik op "Install"
@@ -91,9 +90,9 @@ Na installatie kun je de module configureren via:
 
 ### Cache problemen
 - Leeg je Drupal cache na installatie:
-  ```bash
-  drush cr
-  ```
+```bash
+drush cr
+```
 
 ## Technische details
 

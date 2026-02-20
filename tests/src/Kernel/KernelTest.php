@@ -130,7 +130,7 @@ class KernelTest extends KernelTestBase
             ],
             'default_thumbnail_filename' => 'no-thumbnail.png',
             'providers' => [
-                146 => 'Indiveo'
+                147 => 'Indiveo'
             ],
             'class' => 'Drupal\oembed_providers\Plugin\media\Source\OEmbed',
             'default_name_metadata_attribute' => 'default_name',
