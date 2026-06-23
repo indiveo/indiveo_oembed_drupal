@@ -26,13 +26,13 @@ jobs:
         options: --health-cmd="mysqladmin ping" --health-interval=10s --health-timeout=5s --health-retries=3
     steps:
       - name: Checkout Drupal code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           repository: drupal/drupal
           ref: 11.x
 
       - name: Checkout Indiveo oEmbed code
-        uses: actions/checkout@v6
+        uses: actions/checkout@v7
         with:
           path: modules/contrib/indiveo_oembed_drupal
 
